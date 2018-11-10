@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<style>
+.vl {
+    border-left: 2px solid skyblue;
+    height: 500px;
+}
+</style>
+</head>
+<body >
+ 
+<nav class="navbar navbar-dark bg-dark">
+  <div class="row">
+
+  <div class="col-sm-6"> <%= link_to 'Admin Home' ,'/alogin',class: "btn btn-outline-light" %></div>
+</nav>
+ 
+   </br>
+ <div class="row">
+  <div class="col-sm-1">
+  </div>
+  <div class="col-sm-4" > 
+  
+   <%counter=0%>
+
+      <table class="table table-hover" style="font-size:10pt;">
+       <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Reporter</th>
+            <th scope="col">No.of Victims</th>
+            <th scope="col">Reporting Date</th>
+            <th scope="col" colspan="3" style="text-align:center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% a=true %>
+        <% @detail.each do |d| %>
+            <% a= false %>
+          <tr>
+            <td><%=counter=counter+1%></td>
+            <% if d.u_id == "admin" %>
+              <td><%= Admin.find_by_area(d.area).name %></td>
+            <% else %>
+              <td><%=Guestuser.find(d.u_id).name%></td>
+            <% end %>
+            <td><%=d.count%></td>
+            <td><%=d.created_at%></td>
+            <td><%= link_to 'View',{:action => 'set', :id => d.id},class: "btn btn-outline-primary"%></td>
+            
+          </tr>
+         <%end%>
+        </tbody>
+      </table>
+  </div>
+   <% if flash[:r_id_nil] %>
+    <div class="alert alert-danger" role="alert">
+             
+                  <%=flash[:r_id_nil] %> 
+                  <% flash[:r_id_nil]=nil %>
+             
+          </div>
+  <%end%>
+ <% if !session[:aflag] %>
+ 
+  <div class="col-sm-6"> 
+   
+    
+            <form action="/modify" method="POST">
+     <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token %>">
+      <p> <%= flash[:m_id] %></p>
+              <table class="table table-bordered" align="center" style="box-shadow:5px 10px 8px #888888;width:80% ;margin-top:-15px;">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col" colspan="2" style="text-align:center">
+                      <h4>Missing Report<h4>
+                    <input type="submit" value="Approve" class= "btn btn-outline-light">
+                   
+                     <%= link_to 'Discard','/discard',class: "btn btn-outline-light", :method => 'get' %>
+                      </th>
+                  </tr>
+                </thead>
+                  
+                <tbody style="font-size: 12pt">
+                  <% @d.each do |c| %> 
+                  <%if c.u_id == "admin" %>
+                      <% @user=Admin.find_by_area(c.area) %>
+                  <%else %>
+                      <% @user=Guestuser.find(c.u_id) %>
+                  <% end %>
+
+                 <tr>
+        <td>Reporter Name</td>
+        <td><%= @user.name %></td>
+      </tr>
+      <tr>
+        <td>Repoter Email</td>
+        <td><%= @user.email %></td>
+      </tr>
+       <tr>
+        <td>Reporter Contact Number</td>
+        <td><%= @user.contactno %></td>
+      </tr>
+      <tr>
+        <td>No of Missing People</td>
+        <td><%= c.count%></td>
+      </tr>
+      <tr>
+        <td>Missing People Names</td>
+        <td><%= c.name%></td>
+      </tr>
+      <tr>
+        <td>Area</td>
+        <td><%= c.area%></td>
+      </tr>
+      <tr>
+        <td>Address</td>
+        <td><%= c.address%></td>
+      </tr>
+      <tr>
+        <td>Google Location</td>
+        <td><%=link_to "Click to view in map" ,c.glocation , target: :_blank %></td>
+      </tr>
+      <tr>
+        <td>Emergency Level</td>
+        <td>
+        <%= number_field_tag :elevel,nil ,setp: "1",id: "count" ,min: "1",value: "1",max: "5" %>
+        </td>
+      </tr>
+      <tr>
+        <td>Select Team</td>
+        <td><%= select_tag :r_id, 
+        options_from_collection_for_select(Rescueteam.where(area: @admin[:area]), :id, :name) %></td>
+      </tr>
+      <tr>
+        <td>Status</td>
+        <td><%= c.status%></td>
+      </tr>
+      <tr>
+        <td>Reporting Date</td>
+        <td><%= c.created_at%></td>
+      </tr>
+                  <% end %>
+                </tbody>
+              </table>
+
+  </div>
+   
+</div> 
+</form>
+<%end%>
+<% if a %>
+
+  <div class="alert alert-danger" role="alert">
+
+                        <h3>NO MISSING REPORT</h3>
+                   </div>
+
+<%end%>
+</body>
+</html>

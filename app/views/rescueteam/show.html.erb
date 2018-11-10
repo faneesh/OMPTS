@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</head>
+<body >
+ 
+  
+ <body>
+  
+  <nav class="navbar navbar-dark bg-dark">
+<!-- Navbar content -->
+	<div class="row">
+	    <div class="col-sm-3">
+	    	<%=label_tag 'name',@team.email,class: "btn btn-outline-light" %>
+	    </div>
+	    <div class="col-sm-2"></div>
+	</div>
+    <div class="btn-group" role="group" aria-label="Basic example">
+     	<%= link_to 'Profile', '/profile',class: "btn btn-info" %> 
+     	&nbsp;&nbsp;&nbsp;&nbsp;
+     	<%= link_to 'Logout', '/logout',class: "btn btn-danger" %>
+      
+    </div> 
+  </nav>
+
+  
+   <%counter=0%>
+      <table class="table table-hover" style="font-size:10pt;">
+       <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Reporter</th>
+            <th scope="col">No.of Victims</th>
+            <th scope="col">Emergency Level</th>
+            <th scope="col">Reporting Date</th>
+            <th scope="col" colspan="3" style="text-align:center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% @details.each do |d| %>
+          <tr>
+            <td><%=counter=counter+1%></td>
+            <% if d.u_id == "admin" %>
+              <td><%=Admin.find_by_area(d.area).name%></td>
+            <%else%>
+              <td><%=Guestuser.find(d.u_id).name%></td>
+            <%end%>
+            <td><%=d.count%></td>
+            <td><%=d.elevel%></td>
+            <td><%=d.created_at%></td>
+            <td><%= link_to 'View',{:action=>'rescueview',:id=>d.id},class: "btn btn-outline-primary"%></td>
+            <td><%= link_to 'Rescued',{ :action => 'rescueupdate' , :id => d.id },class: "btn btn-outline-primary" %>
+            </td>
+          </tr>
+         <%end%>
+        </tbody>
+      </table>
+</body>
+</html>

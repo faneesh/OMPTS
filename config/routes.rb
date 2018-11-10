@@ -1,0 +1,46 @@
+Rails.application.routes.draw do
+  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+
+root 'ompt#index'
+post 'guestusers' => 'ompt#create'
+get '/guestusers' => 'ompt#index'
+post 'missingdetails' => 'ompt#create'
+post '/show' => 'ompt#show'
+get '/show' => 'ompt#show'
+get '/updatesms' => 'admin#updatesms'
+get '/set' => 'admin#set'
+get '/check' => 'ompt#check'
+post 'admins' => 'ompt#check'
+post '/find' => 'ompt#find'
+get '/rescuesms' => 'rescueteam#rescuesms'
+get '/search'=>'ompt#search'
+get '/list' => 'ompt#list'
+get '/email' => 'ompt#email'
+
+post '/modify' => 'admin#modify'
+get '/discard' => 'admin#discard'
+get '/teamview' => 'rescueteam#show'
+get '/alogin' => 'admin#index'
+get '/alogout' => 'admin#logout'
+post '/add' => 'ompt#add'
+get '/slogin' => 'rescueteam#index'
+get '/signup' => 'rescueteam#new'
+post '/asession' => 'admin#check'
+post '/ssession' => 'rescueteam#check'
+get '/adminview' => 'admin#show'
+get '/search' => 'ompt#search'
+get '/adminedit' => 'admin#edit'
+get '/rescueteamview' => 'rescueteam#show'
+post 'rescueteams' => 'rescueteam#create'
+get '/rescueupdate'=>'rescueteam#rescueupdate'
+get '/profile'=>'rescueteam#profile'
+get '/rescueview'=>'rescueteam#rescueview'
+get '/logout'=>'rescueteam#logout'
+get '/rescueteamview' => 'rescueteam#show'
+get '/adminprofile'=>'admin#profile'
+#in post guestusers is table name
+
+
+get '/adminnotification' => 'admin#adminnotification'
+#post 'adminnotification' => 'admin#create'
+end
